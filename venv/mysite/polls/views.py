@@ -93,37 +93,11 @@ class ProductView(generic.View):
     def get(self, request, pk):
         p = Product_id.objects.get(pk=pk)
         form = Product_idForm(instance=p )
-        c = []
-        all_product_prices = Product.objects.filter(Product=p).extra(order_by=['datumzeit'])
-        len_product_prices = len(all_product_prices)*2
-        max_product_price = None
-        for i in all_product_prices:
-            if max_product_price is None:
-                max_product_price = max(i.Alter_Preis, i.Neuer_Preis)
-            else:
-                max_product_price = max(i.Alter_Preis, i.Neuer_Preis, max_product_price)
 
-        height = 200
-        width = 700
-        count = 0
-        result = []
-        for product in all_product_prices:
-            y_alt = height*(1-((product.Alter_Preis/max_product_price)*Decimal(0.9)))
-            x_alt = width*(Decimal(count/len_product_prices)*Decimal(0.9))
-            result.append((x_alt, y_alt,))
 
-            count += 1
-            y_neu = height * (1-((product.Neuer_Preis / max_product_price) * Decimal(0.9)))
-            x_neu = width * (Decimal(count / len_product_prices) * Decimal(0.9))
-            result.append((x_neu, y_neu,))
-
-            count += 1
 
         context = {
             'form': form,
-            'height': height,
-            'width': width,
-            'ProductValues': result
         }
         return render(request, 'polls/product.html', context)
 
